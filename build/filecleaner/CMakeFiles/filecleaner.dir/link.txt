@@ -1,0 +1,2 @@
+/usr/bin/ar cr libfilecleaner.a  CMakeFiles/filecleaner.dir/filecleaner.cpp.o
+/usr/bin/ranlib libfilecleaner.a
