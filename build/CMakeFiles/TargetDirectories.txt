@@ -1,2 +1,0 @@
-/home/vitaly/filebrowser/build/CMakeFiles/filebrowser.dir
-/home/vitaly/filebrowser/build/filecleaner/CMakeFiles/filecleaner.dir
