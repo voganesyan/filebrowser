@@ -9,11 +9,11 @@ class DirectoryChooser : public Gtk::VBox
 public:
     DirectoryChooser(Gtk::Widget *parent = 0);
     //signal accessor:
-    typedef sigc::signal<void, const std::string&> type_signal_something;
-    type_signal_something choosenDirectoryChanged();
+    typedef sigc::signal<void, const std::string&> type_signal_cdc;
+    type_signal_cdc choosenDirectoryChanged();
     
 protected:
-    type_signal_something m_signal_something;
+    type_signal_cdc m_choosenDirectoryChanged;
 
 private:
     void on_comboboxRoot_currentIndexChanged();

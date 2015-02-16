@@ -63,28 +63,35 @@ void DirectoryChooser::add_to_tree(Gtk::TreeModel::iterator& parentItem)
   {
          path+=G_DIR_SEPARATOR;
   }
-         cout << "Path " << path << endl;
+//         cout << "Path " << path << endl;
 
-  Glib::RefPtr<Gio::File> dir = Gio::File::create_for_path(path);
-  Glib::RefPtr<Gio::FileEnumerator> infos = dir->enumerate_children("standard::is-hidden,"
-			 	"standard::name,standard::display-name,standard::type,"
-		  		"access::can-execute,standard::size");
-  Glib::RefPtr<Gio::FileInfo> info = infos->next_file();
-
-  while(info)
+  try
   {
-    if (info->get_file_type() == Gio::FILE_TYPE_DIRECTORY)
+    Glib::RefPtr<Gio::File> dir = Gio::File::create_for_path(path);
+    Glib::RefPtr<Gio::FileEnumerator> infos = dir->enumerate_children("standard::name");
+  
+    Glib::RefPtr<Gio::FileInfo> info = infos->next_file();
+
+    while(info)
     {
+      if (info->get_file_type() == Gio::FILE_TYPE_DIRECTORY)
+      {
         Gtk::TreeNodeChildren children = row.children();
         Gtk::TreeModel::iterator iter = model->append(children);
         Gtk::TreeModel::Row row = *iter;
         row[m_Columns.m_col_name] = info->get_name();
         row[m_Columns.m_col_path] = path + info->get_name();  
-    }
+      }
     
-    info = infos->next_file();
+      info = infos->next_file();
 
+    }
   }
+  catch(const Gio::Error& ex)
+  {
+    std::cout << ex.what () << std::endl;
+  }
+ 
 
 }
 
@@ -105,8 +112,7 @@ void DirectoryChooser::on_tree_selectionChanged()
     Glib::RefPtr<Gtk::TreeSelection> selection = tree.get_selection();
     Gtk::TreeModel::iterator iter = selection->get_selected();
     Gtk::TreeModel::Row row = *iter;
-    //choosenDirectoryChanged(row.get_value(m_Columns.m_col_path));
-    m_signal_something.emit(row.get_value(m_Columns.m_col_path));
+    m_choosenDirectoryChanged.emit(row.get_value(m_Columns.m_col_path));
 }
 
 void DirectoryChooser::on_comboboxRoot_currentIndexChanged()
@@ -128,7 +134,7 @@ void DirectoryChooser::on_comboboxRoot_currentIndexChanged()
    
 }
 
-DirectoryChooser::type_signal_something DirectoryChooser::choosenDirectoryChanged()
+DirectoryChooser::type_signal_cdc DirectoryChooser::choosenDirectoryChanged()
 {
-  return m_signal_something;
+  return m_choosenDirectoryChanged;
 }
