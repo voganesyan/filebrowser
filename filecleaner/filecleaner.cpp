@@ -1,16 +1,21 @@
 #include "filecleaner.h"
 #include <iostream>
 #include <stdio.h>
-#ifdef WINDOWS
+
+#ifdef __MINGW32__
+
 #include <windows.h>
 #include <tchar.h>
+
 #else
+
 #include <unistd.h> //truncate
 #include <dirent.h> 
 #include <sys/stat.h> 
 #include <sys/types.h> 
 #include <errno.h>
 #include <string.h>   // for strerror()
+
 #endif
 
 using namespace std;
@@ -19,7 +24,7 @@ using namespace std;
 
 int FC_GetFilesInDirectory(vector<FC_FileInfo> &files, const string &directory, const string &file_extension)
 {
-#ifdef WINDOWS
+#ifdef __MINGW32__
     HANDLE dir;
     WIN32_FIND_DATA file_data;
 
@@ -89,7 +94,7 @@ int FC_GetFilesInDirectory(vector<FC_FileInfo> &files, const string &directory, 
  
 bool FC_ClearFile(const string &file, string &error_message)
 {
-#ifdef WINDOWS
+#ifdef __MINGW32__
   HANDLE hf = CreateFile (file.c_str(), GENERIC_READ |GENERIC_WRITE,
                     0,
                     NULL, TRUNCATE_EXISTING,
@@ -107,7 +112,7 @@ bool FC_ClearFile(const string &file, string &error_message)
  if (truncate(file.c_str(), 0) != 0) 
  {
   //perror("perror");
-  cout << "DDDDDD" << strerror(errno) << endl;
+  cout << "Error" << strerror(errno) << endl;
   error_message = strerror(errno);
   return false;
  }

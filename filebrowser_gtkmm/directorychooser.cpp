@@ -35,11 +35,17 @@ DirectoryChooser::DirectoryChooser(Gtk::Widget *parent)
     pack_start(scwin);
     pack_start(statusbar, Gtk::PACK_SHRINK);
 }
-
+//unfortunately there is no function get_drives in gtk
+#ifdef G_OS_WIN32
+#include <windows.h>
+#include <direct.h>
+#include <stdio.h>
+#include <tchar.h>
+#endif
 void DirectoryChooser::get_drives ()
 {
 #ifdef G_OS_WIN32
- GetLogicalDrives(void);
+ //GetLogicalDrives();
 #else
 
 #endif
